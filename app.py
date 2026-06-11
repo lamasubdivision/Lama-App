@@ -24,7 +24,13 @@ def generate_pdf_bytes(client_data):
 
 # --- Database Setup & Initialization ---
 def get_db_connection():
-    return sqlitecloud.connect(st.secrets["DB_CONNECTION_STRING"])
+    # Try fetching from st.secrets first, then fallback to os.environ
+    db_url = st.secrets.get("DB_CONNECTION_STRING") or os.environ.get("DB_CONNECTION_STRING")
+    
+    if not db_url:
+        raise ValueError("DB_CONNECTION_STRING is not set in secrets or environment variables.")
+        
+    return sqlitecloud.connect(db_url)
 
 def init_db(conn):
     conn.execute("""
