@@ -14,7 +14,6 @@ def generate_pdf_bytes(client_data):
     """Generates PDF in memory for download."""
     pdf = PDF()
     pdf.add_page()
-    my_secret_key = st.secrets["DB_CONNECTION_STRING"]
     pdf.set_font("Arial", size=10)
     pdf.cell(0, 10, f"Client: {client_data['name']} | Plot: {client_data['plot_number']}", ln=True)
     pdf.cell(0, 10, f"Total Price: {client_data['contract_total']:,.0f} VUV", ln=True)
@@ -25,7 +24,7 @@ def generate_pdf_bytes(client_data):
 
 # --- Database Setup & Initialization ---
 def get_db_connection():
-    return sqlitecloud.cts["DB_CONNECTION_STRING"])
+    return sqlitecloud.connect(st.secrets["DB_CONNECTION_STRING"])
 
 def init_db(conn):
     conn.execute("""
